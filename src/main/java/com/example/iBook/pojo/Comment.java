@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name="comments")
@@ -32,6 +33,18 @@ public class Comment {
 	
 	@Column(name="comment_date")
 	private Date date;
+
+	@Transient
+	private boolean editable;
+
+
+	public boolean isEditable() {
+		return editable;
+	}
+
+	public void setEditable(boolean editable) {
+		this.editable = editable;
+	}
 
 	public int getId() {
 		return id;
