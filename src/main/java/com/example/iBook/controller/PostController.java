@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,14 +31,31 @@ public class PostController {
 		this.PostRepo = PostRepo;
 		this.CommentRepo = CommentRepo;
 	}
+	
+	@RequestMapping("/search-posts")
+	public List<Post> searchPost(@RequestParam String text, @RequestParam int limit, @RequestParam int offset){
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String name = auth.getName();
+		Pageable page = PageRequest.of(offset/limit, limit);
+		
+		List <Post> posts = (List<Post>) PostRepo.findAllByContentContainingOrderByDateDesc(text, page);
+		
+		for(Post post: posts) {
+			if(name.equals(post.getUser().getName())) {
+				post.setEditable(true);
+			}
+		}
+		return posts;
+	}
 
 	@RequestMapping("/get-posts")
-	public List<Post> getPosts() {
+	public List<Post> getPosts(@RequestParam int limit, @RequestParam int offset) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String name = auth.getName();
 		User user = UserRepo.findFirstByName(name);
-
-		List<Post> posts = (List<Post>) PostRepo.findAll();
+		Pageable page = PageRequest.of(offset/limit, limit);
+		
+		List<Post> posts = (List<Post>) PostRepo.findAllByOrderByDateDesc(page);
 
 		for (Post post : posts) {
 			if (name.equals(post.getUser().getName())) {
