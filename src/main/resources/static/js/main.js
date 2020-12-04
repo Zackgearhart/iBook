@@ -27,7 +27,6 @@ $(function() {
 
 	function scrolled() {
 		if (ajaxDone && morePages) {
-			console.log("test");
 			var top = $(this).scrollTop();
 			var size = $("body").height();
 			var height = $(this).height();
@@ -62,15 +61,15 @@ $(function() {
 					ajaxDone = true;
 					if (data.length < limit) {
 						morePages = false;
-					} 
-						morePages = true;
-					    offset = 0;
-						$(".post").remove();
-						buildPosts(data);
-						console.log(ajaxDone +" ajaxdone " + "limit = " + limit + "data.length = " + data.length);
-						if (data.length < limit) {
-							morePages = false;
-						}
+					}
+					morePages = true;
+					offset = 0;
+					$(".post").remove();
+					buildPosts(data);
+					console.log(ajaxDone + " ajaxdone " + "limit = " + limit + " data.length = " + data.length);
+					if (data.length < limit) {
+						morePages = false;
+					}
 				}
 			});
 		}
